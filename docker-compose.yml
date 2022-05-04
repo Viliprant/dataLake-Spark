@@ -1,0 +1,75 @@
+
+version: "3.7"
+services:
+
+  spark-master:
+    image: bde2020/spark-master:3.0.1-hadoop3.2
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    volumes:
+       - ./work:/home/jovyan/work
+    environment:
+       - "SPARK_LOCAL_IP=spark-master"
+
+  spark-worker:
+    image: bde2020/spark-worker:3.0.1-hadoop3.2
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=3G
+      - SPARK_DRIVER_MEMORY=2G
+      - SPARK_EXECUTOR_MEMORY=2G
+    volumes:
+       - ./work:/home/jovyan/work
+
+  pyspark-notebook:
+    image: jupyter/pyspark-notebook
+    container_name: pyspark_notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./work:/home/jovyan/work
+
+  mysql:
+      image: mysql:latest
+      container_name: mysql
+      working_dir: /mysql/data
+      volumes:
+        - .:/application
+      environment:
+        - MYSQL_ROOT_PASSWORD=ateam
+        - MYSQL_DATABASE=ateam
+        - MYSQL_USER=ateam
+        - MYSQL_PASSWORD=ateam
+      ports:
+        - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: ateam
+      PMA_PASSWORD: ateam
+      MYSQL_ROOT_PASSWORD: ateam
+      MYSQL_USER: ateam
+      MYSQL_PASSWORD: ateam
+    ports:
+      - "82:80"
+
+  react:
+    build:
+      context: .docker/app
+    ports:
+      - "3000:3000"
+    container_name: react-ui
+    stdin_open: true
+    volumes:
+       - ./my-app:/usr/src/app/my-app
+       - /usr/src/app/my-app/node_modules
