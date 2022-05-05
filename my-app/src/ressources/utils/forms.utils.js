@@ -99,7 +99,7 @@ export function SelectField(props){
                 {({form}) => {
                     const {setFieldValue} = form
                     return (
-                        <Select id={name} name={name} {...rest} className="" options={options} placeholder={label} isSearchable onChange={(value) => setFieldValue(name,value.label)}/>
+                        <Select id={name} name={name} {...rest} className="" options={options} placeholder={label} isSearchable onChange={(value) => setFieldValue(name,value.value)}/>
                     )
                 }}
             </Field>

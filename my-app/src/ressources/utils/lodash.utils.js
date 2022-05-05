@@ -12,6 +12,8 @@ export default class LodashUtils {
     }
 
     static range = (min, max, step = 1) => _.range(min, max+1, step);
+
+
 }
 
 
