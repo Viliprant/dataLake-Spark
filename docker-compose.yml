@@ -72,3 +72,25 @@ services:
     stdin_open: true
     volumes:
        - ./my-app:/usr/src/app/my-app
+
+  php:
+    build: .docker/php
+    container_name: ateam-php
+    working_dir: /application
+    volumes:
+      - ./api:/application
+      - ./.docker/php/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+    ports:
+      - "9100:9000"
+  nginx:
+    image: nginx:alpine
+    container_name: ateam-nginx
+    working_dir: /application
+    depends_on:
+      - php
+    volumes:
+        - ./api:/application
+        - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        - .:/mysql/data
+    ports:
+      - "80:80"
