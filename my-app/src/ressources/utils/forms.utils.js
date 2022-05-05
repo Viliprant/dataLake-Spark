@@ -34,7 +34,7 @@ export function FormikControl(props) {
 
 }
 
-export function Input(props) {
+function Input(props) {
     const {label, name, className, ...rest} = props
     return (
         <div className={className}>

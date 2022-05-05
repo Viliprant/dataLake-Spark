@@ -5,6 +5,8 @@ import {BAR_CHART, COLORS, DATAS, LINE, LINE_CHART} from "../../../ressources/ut
 import {UserData, UserData_2} from "../../../ressources/data/user.data";
 import MeteoService from "../../../services/WebService/meteo.service";
 import LodashUtils from "../../../ressources/utils/lodash.utils";
+import {FormikControl} from "../../../ressources/utils/forms.utils";
+import {Formik, Form} from "formik";
 
 function RechercheSub(props) {
 
@@ -53,9 +55,8 @@ function RechercheSub(props) {
         return undefined;
     }
 
-    function submitRecherche(e) {
-        e.preventDefault()
-        console.log(formBeean)
+    const submitRecherche = (values) => {
+        console.log(values)
     }
 
     return (
@@ -71,32 +72,14 @@ function RechercheSub(props) {
                     <div className=" border card-akb h-100">
                         <h3>Recheche de données météorologiques</h3>
                         <hr/>
-                        <form action="" onSubmit={submitRecherche}>
-                            <div className="w-100 my-1">
-                                multiple select station
-                            </div>
-                            <div className="w-100 my-1">
-                                <div className="row row-cols-1 row-cols-md-2">
-                                    <div className="">
-                                        <label htmlFor="">Year Min</label>
-                                        <select name="yearMin" id="yearMin" onChange={changeMin} value={formBeean.yearMin}>
-                                            {MeteoService.YEARS.map(y => (
-                                                <option value={y}>{y}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className=""></div>
-                                </div>
+                        <Formik>
+                            <Form onSubmit={submitRecherche}>
+                                <FormikControl control="select" name="stations" label={"Stations"} options={MeteoService.STATIONS} isMulti />
 
-                                anné min / année max
-                            </div>
-                            <div className="w-100 my-1">
-                                select données
-                            </div>
-                            <div className="w-100 my-1">
-                                <button className="btn btn-primary w-100">Rechercher</button>
-                            </div>
-                        </form>
+                            </Form>
+                        </Formik>
+
+
                     </div>
                 </BlockCmn>
 
