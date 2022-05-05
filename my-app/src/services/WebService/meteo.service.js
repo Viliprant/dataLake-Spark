@@ -1,5 +1,6 @@
 import axios from "axios";
 import LodashUtils from "../../ressources/utils/lodash.utils";
+import ws, {GET} from "./web.service";
 
 
 export default class MeteoService {
@@ -14,6 +15,7 @@ export default class MeteoService {
 
     static YEARS = LodashUtils.range(1980, 2022);
 
+    static getCGI = () => GET("cgi")
 
 
 }

@@ -2,9 +2,7 @@ import axios from "axios";
 import AuthService from "../Routing/auth.service";
 
 export const ws = axios.create({
-    baseURL: `${process.env.REACT_APP_API_URL}`,
-    headers: {'session_user': AuthService.sessionUser}
-
+    baseURL: `http://127.0.0.1:80`,
 })
 
 export default ws

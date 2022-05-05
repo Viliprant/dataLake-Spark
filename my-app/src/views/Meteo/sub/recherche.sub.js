@@ -37,6 +37,9 @@ function RechercheSub(props) {
     })
 
     useEffect(() => {
+        MeteoService.getCGI().then(res => {
+            console.log(res)
+        } )
         let dataSet = [];
         for (let i = 0; i < DATAS.length; i++) {
             let line = LINE.build(Object.keys({DATAS})[0], DATAS[i].map(d => d.userGain), COLORS[i])
