@@ -11,11 +11,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiController extends AbstractController
 {
-    #[Route('/cgi', name: 'app_cgi')]
+    #[Route('/cig', name: 'app_cig')]
     public function cgiCalcul(ApiService $apiService): Response
     {
         $calcul = $apiService->getJson('CIG_CALCUL');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
@@ -25,6 +26,7 @@ class ApiController extends AbstractController
     {
         $calcul = $apiService->getJson('SLP_CALCUL');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
@@ -34,6 +36,7 @@ class ApiController extends AbstractController
     {
         $calcul = $apiService->getJson('STATION');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
@@ -43,6 +46,7 @@ class ApiController extends AbstractController
     {
         $calcul = $apiService->getJson('TEMP_CALCUL');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
@@ -52,6 +56,7 @@ class ApiController extends AbstractController
     {
         $calcul = $apiService->getJson('VIS_CALCUL');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
@@ -61,6 +66,7 @@ class ApiController extends AbstractController
     {
         $calcul = $apiService->getJson('WIND_ANGLE_CALCUL');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
@@ -70,6 +76,7 @@ class ApiController extends AbstractController
     {
         $calcul = $apiService->getJson('WIND_SPEED_CALCUL');
         $response = new JsonResponse($calcul);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
