@@ -25,6 +25,8 @@ export function FormikControl(props) {
             return <FileInput {...rest}/>
         case 'select':
             return <SelectField {...rest} />
+        case 'select-multi':
+            return <MultiSelectField {...rest} />
         case 'select-create':
             return <CreatSelect {...rest}/>
 
@@ -100,6 +102,28 @@ export function SelectField(props){
                     const {setFieldValue} = form
                     return (
                         <Select id={name} name={name} {...rest} className="" options={options} placeholder={label} isSearchable onChange={(value) => setFieldValue(name,value.value)}/>
+                    )
+                }}
+            </Field>
+            <ErrorMessage name={name} component={TextError}/>
+        </div>)
+}
+
+export function MultiSelectField(props){
+    const {label, name, className, options, ...rest} = props
+
+
+    return (
+        <div className={className}>
+            <label htmlFor={name} className="form-label">{label}</label>
+            <Field as="select" className="form-control" placeholder={label}>
+                {({form}) => {
+                    const {setFieldValue} = form
+                    const handleChange = (e) => {
+                        setFieldValue(name, Array.isArray(e) ? e.map(x => x.value) : []);
+                    }
+                    return (
+                        <Select id={name} name={name} {...rest} className="" options={options} placeholder={label} isSearchable isMulti onChange={handleChange}/>
                     )
                 }}
             </Field>

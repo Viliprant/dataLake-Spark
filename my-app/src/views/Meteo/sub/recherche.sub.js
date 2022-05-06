@@ -12,73 +12,62 @@ import {GET} from "../../../services/WebService/web.service";
 
 function RechercheSub(props) {
 
+    const [isLoaded, setIsLoaded] = useState(false)
+
     const [stations, setStations] = useState([])
     const [years, setYears] = useState([])
 
     const [filteredDatas, setFilteredDatas] = useState([])
 
     const [dataSets, setDataSets] = useState([])
-    const [userData, setUserData] = useState({
-        labels: LodashUtils.range(2016, 2020), // todo: from form get min year and max year
-        datasets: [{
-            label: "User Gained",
-            data: UserData.map(data => data.userGain),
-            backgroundColor: 'gold',
-            borderColor: 'gold',
-        }, {
-            label: "User Gained 2",
-            data: UserData_2.map(data => data.userGain),
-            backgroundColor: 'blue',
-            borderColor: 'blue',
-        }
-
-        ]
-
-    })
+    const [userData, setUserData] = useState({})
 
     const initialValues = {
-        station: "",
-        anneMax: 2022,
-        anneMin: 1980,
+        stations: [],
+        anneeMax: 2022,
+        anneeMin: 1980,
         datas_types: '',
         datas: ''
-
-
     }
 
 
     useEffect(() => {
         _initStationsList()
         _initYears()
-        let dataSet = [];
-        for (let i = 0; i < DATAS.length; i++) {
-            let line = LINE.build(Object.keys({DATAS})[0], DATAS[i].map(d => d.userGain), COLORS[i])
-            dataSet.push(line)
-        }
-        setUserData({
-            labels: LodashUtils.range(2016, 2020),
-            datasets: dataSet
-        })
-        setDataSets(dataSet)
-
+        console.log("init",userData)
     }, [])
 
 
     const submitRecherche = (values) => {
+        setIsLoaded(true)
+        setDataSets([])
         console.log(values)
-        GET(values.datas).then(res =>  {
-            let final = res.filter(data => {
-                return data.YEAR <= values.anneMax && data.YEAR >= values.anneMin && data.STATION === values.station
-            }).map(data => data[values.datas_types])
+
+        values.stations.map(async (station, i) => {
+            let res = await MeteoService.getSelectedDatas(values.datas)
+            let final = res.filter(data => data.YEAR <= values.anneeMax && data.YEAR >= values.anneeMin && data.STATION === station
+            ).map(data => {
+                return {year: parseInt(data.YEAR), value: data[values.datas_types]}
+            }).sort((a, b) => parseInt(a.year) - parseInt(b.year))
+
+            let line = LINE.build(station, final, COLORS[i])
+            console.log(line)
+            setDataSets(datas => [...datas, line])
 
 
-            console.log(final)
         })
+        console.log('yeeaahhhhhhhh')
+        setUserData({
+            labels: LodashUtils.range(1980, 2022),
+            datasets: dataSets
+        })
+
+        console.log("submit",userData)
 
     }
 
     const _initStationsList = () => {
-        MeteoService.getSTATIONS().then(res => {
+        let _stations = MeteoService.getSTATIONS().then(res => {
             let _stations = []
             res.map(s => _stations.push({label: s.NAME, value: s.STATION}))
             setStations(_stations)
@@ -86,7 +75,7 @@ function RechercheSub(props) {
     }
 
     const _initYears = () => {
-        MeteoService.getSLP().then(res => {
+        MeteoService.getSelectedDatas('temp').then(res => {
             let _uniqueYears = new Set()
             let _ys = []
             res.map(s => _uniqueYears.add(s.YEAR))
@@ -101,8 +90,9 @@ function RechercheSub(props) {
             <div className="row row-cols-1 row-cols-lg-2 g-4">
                 <BlockCmn className="col my-3 p-3 ">
                     <div className="card-ak border h-100 ">
-                        MAP
-                        {JSON.stringify(years)}
+                        Ici il devrait y'avoir une map mais tu connais ligaments croisés
+
+                        {JSON.stringify(dataSets)}
                     </div>
                 </BlockCmn>
                 <BlockCmn className="col my-3 p-3 ">
@@ -112,11 +102,12 @@ function RechercheSub(props) {
                         <Formik initialValues={initialValues} onSubmit={submitRecherche}>
                             <Form>
                                 <div className="row row-cols-1">
-                                    <FormikControl control="select" name="station" label={"Stations"}
+                                    <FormikControl control="select-multi" name="stations" label={"Stations"}
                                                    options={stations}/>
                                     <div className="row row-cols-2">
-                                        <FormikControl control="select" options={years} name="anneeMin" label={"Début"}/>
-                                        <FormikControl control="select" options={years} name="anneMax" label={"Fin"}/>
+                                        <FormikControl control="select" options={years} name="anneeMin"
+                                                       label={"Début"}/>
+                                        <FormikControl control="select" options={years} name="anneeMax" label={"Fin"}/>
                                     </div>
 
                                     <FormikControl control="select" options={MeteoService.SELECTED_DATAS} name="datas"
@@ -137,9 +128,12 @@ function RechercheSub(props) {
 
 
             </div>
-            <BlockCmn className="my-3 border p-3 w-100">
-                <LINE_CHART data={userData}/>
-            </BlockCmn>
+            {isLoaded && (
+                <BlockCmn className="my-3 border p-3 w-100" id="chart">
+                    <LINE_CHART data={userData}/>
+                </BlockCmn>
+            )}
+
 
 
         </SubTpl>

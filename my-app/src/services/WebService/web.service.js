@@ -35,4 +35,18 @@ export const PUT = (url, data) => {
 
 }
 
+export const FETCH = async (url, params = {}) => {
+    let response;
+
+    try {
+        response = await ws.get(url, params);
+    } catch (e) {
+        // catch error
+        console.log(e.message)
+    }
+
+    // if success return value
+    return response?.data ? response?.data : null // or set initial value
+}
+
 
