@@ -1,7 +1,7 @@
-import {Chart as ChartJS} from "chart.js/auto";
+import { Chart as ChartJS } from "chart.js/auto";
 
-import {Line} from "react-chartjs-2";
-import {UserData, UserData_2} from "../data/user.data";
+import { Line } from "react-chartjs-2";
+import { UserData, UserData_2 } from "../data/user.data";
 import LodashUtils from "./lodash.utils";
 
 export const COLORS = [
@@ -17,12 +17,7 @@ export const COLORS = [
     "#EAABC0"
 ]
 
-export const LINE_CHART = ({data}) => (<Line data={data}/>)
-
-export const DATAS = [
-    UserData,
-    UserData_2
-]
+export const LINE_CHART = ({ data }) => (<Line data={data} />)
 
 export class LINE {
     label;
@@ -45,7 +40,7 @@ export class LINE {
     static create_data_set = (minDate, maxDate, datas) => {
         let dataSet = [];
         for (let i = 0; i < datas.length; i++) {
-            let line = LINE.build(Object.keys({datas})[0], datas[i].map(d => d.userGain), COLORS[i])
+            let line = LINE.build(Object.keys({ datas })[0], datas[i].map(d => d.userGain), COLORS[i])
             dataSet.push(line)
         }
         return {
