@@ -6,6 +6,7 @@ import MeteoService from "../../../services/WebService/meteo.service";
 import {FormikControl} from "../../../ressources/utils/forms.utils";
 import {Formik, Form} from "formik";
 import {SubViewTitre} from "../../../components/atoms/view.titre";
+import MapSection from "../section/map.section";
 
 function RechercheSub({_stations = []}) {
 
@@ -15,6 +16,7 @@ function RechercheSub({_stations = []}) {
 
     const [stations, setStations] = useState([])
     const [years, setYears] = useState([])
+    const [selectedStations, setSelectedStations] = useState(_stations)
 
     const [dataSets, setDataSets] = useState({
         datasets: [],
@@ -73,6 +75,7 @@ function RechercheSub({_stations = []}) {
 
     const _initStationsList = () => {
         MeteoService.getSTATIONS().then(res => {
+            setSelectedStations(stations)
             let _stations = []
             res.map(s => _stations.push({label: s.NAME, value: s.STATION}))
             setStations(_stations)
@@ -95,7 +98,7 @@ function RechercheSub({_stations = []}) {
             <div className="row row-cols-1 row-cols-lg-2 g-4">
                 <BlockCmn className="col my-3 p-3 ">
                     <div className="card-ak border h-100 d-flex align-items-center justify-content-around">
-                        <p className="text-center">Ici il devrait y'avoir une map mais tu connais ligaments croisés</p>
+                        <MapSection stations={selectedStations}/>
 
                     </div>
                 </BlockCmn>
