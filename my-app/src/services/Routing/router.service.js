@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Routes, Route} from "react-router-dom";
 import AuthService from "./auth.service";
 
@@ -23,17 +23,23 @@ import LoginHomeView from "../../views/Login/login.home.view";
 import RechercheSub from "../../views/Meteo/sub/recherche.sub";
 import HistoriqueRechercheSub from "../../views/Meteo/sub/historique.recherche.sub";
 import StationMapSub from "../../views/Meteo/sub/station.map.sub";
+import MeteoService from "../WebService/meteo.service";
 
 {/* // todo: modal */
 }
 
 
 export default function RouterService() {
+    const [stations, setStations] = useState()
+
+    useEffect(() => {
+        MeteoService.getSTATIONS().then(res => setStations(res))
+    }, [])
     return (
         <Routes>
             <Route path="/" element={<SiteHomeView/>}>
-                <Route path="" element={<StationMapSub/>}/>
-                <Route path="recherche" element={<RechercheSub/>}/>
+                <Route path="" element={<StationMapSub stations={stations}/>}/>
+                <Route path="recherche" element={<RechercheSub _stations={stations}/>}/>
                 <Route path="historique-recherche" element={<HistoriqueRechercheSub/>}/>
             </Route>
             <Route path="/login"

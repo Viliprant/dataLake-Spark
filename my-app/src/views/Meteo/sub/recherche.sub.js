@@ -7,7 +7,7 @@ import {FormikControl} from "../../../ressources/utils/forms.utils";
 import {Formik, Form} from "formik";
 import {SubViewTitre} from "../../../components/atoms/view.titre";
 
-function RechercheSub() {
+function RechercheSub({_stations = []}) {
 
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -96,6 +96,7 @@ function RechercheSub() {
                 <BlockCmn className="col my-3 p-3 ">
                     <div className="card-ak border h-100 d-flex align-items-center justify-content-around">
                         <p className="text-center">Ici il devrait y'avoir une map mais tu connais ligaments croisés</p>
+
                     </div>
                 </BlockCmn>
                 <BlockCmn className="col my-3 p-3 ">
